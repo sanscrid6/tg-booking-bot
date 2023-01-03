@@ -1,7 +1,8 @@
 import {Telegraf} from 'telegraf';
 import {TOKEN} from "./config";
+import {run} from "./models";
 
-console.log(TOKEN, 'qq', process.env.TG_TOKEN);
+run().catch(err => console.log(err));
 const bot = new Telegraf(TOKEN);
 bot.start((ctx) => ctx.reply('Welcome'));
 bot.help((ctx) => ctx.reply('Send me a sticker'));

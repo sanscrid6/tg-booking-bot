@@ -1,11 +1,26 @@
 version: '3.9'
 services:
+  mongo:
+    image: mongo
+    restart: always
+    env_file:
+      - mongo.env
+    ports:
+      - "27017:27017"
+    volumes:
+      - db:/data/db
   app:
     build:
       context: .
       dockerfile: Dockerfile
+    links:
+      - mongo
     ports:
       - "8888:8888"
+    depends_on:
+      - mongo
     restart: on-failure
     command: "yarn start"
+volumes:
+  db:
 
