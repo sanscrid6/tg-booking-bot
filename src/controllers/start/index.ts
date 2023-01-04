@@ -1,6 +1,7 @@
-import {Context} from "telegraf";
+import {Context, Markup} from "telegraf";
 import {User} from "../../models/User";
-import {logger} from "../../utils/logger";
+import {logger} from "../../utils/Logger";
+import {CONTROLLER_TRIGGERS} from "../../utils/ControllerTriggers";
 
 
 export const startHandler = async (ctx: Context) => {
@@ -21,4 +22,12 @@ export const startHandler = async (ctx: Context) => {
     else {
         logger.error(`cant get id from ${ctx.from}`);
     }
+
+    return ctx.reply('Custom buttons keyboard', Markup
+        .keyboard([
+            [CONTROLLER_TRIGGERS.DATES_LIST],
+        ])
+        .oneTime()
+        .resize()
+    )
 }
