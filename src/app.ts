@@ -17,8 +17,8 @@ const main = async () => {
 
     bot.hears(CONTROLLER_TRIGGERS.DATES_LIST, dateListController);
     bot.hears('/test', testController)
-
-    bot.action(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/, dateController)
+    ///\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/
+    bot.action(/^[\w\d]{24}$/, dateController)
 
     bot.launch();
     logger.info('bot started');

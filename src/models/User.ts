@@ -8,7 +8,7 @@ export interface IUser extends Document{
     firstName: string,
     lastName: string,
     username: string,
-    role: 'Admin' | 'User',
+    role: 'ADMIN' | 'USER',
     history?: IOrder[],
     // очередь для желаний
     wishes?: IOrder[],
@@ -23,7 +23,7 @@ const userSchema = new Schema<IUser>({
     firstName: {type: String, required: true},
     lastName: {type: String, required: true},
     username: {type: String, required: true},
-    role: {type: String, required: true, default: 'User'},
+    role: {type: String, required: true, default: 'USER'},
     history: [{type: String, ref: 'Order'}],
     wishes: [{type: String, ref: 'Order'}],
     booked: [{type: String, ref: 'Order'}],
