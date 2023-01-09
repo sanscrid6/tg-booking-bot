@@ -20,7 +20,7 @@ services:
     depends_on:
       - mongo
     restart: on-failure
-    command: "npm run start"
+    command: "yarn start"
 volumes:
   db:
 

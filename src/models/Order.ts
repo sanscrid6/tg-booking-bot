@@ -7,7 +7,7 @@ export interface IOrder extends Document{
 }
 
 const userSchema = new Schema<IOrder>({
-    date: {type: Date, required: true},
+    date: {type: Date, required: true, },
     bookingType: {type: String, required: true, default: 'EMPTY'},
 });
 
