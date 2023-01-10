@@ -1,10 +1,10 @@
 import {Document} from "mongoose";
-import {Actions} from "./Actions";
+import {ActionType} from "./Actions";
 
 interface IGenerateOptions<T extends Document> {
     textGetter: (item: T) => string,
     rowLength: number,
-    action: Actions
+    action: ActionType
 }
 
 export function generateInlineKeyboard<T extends Document>(arr: Array<T>, options: IGenerateOptions<T>){

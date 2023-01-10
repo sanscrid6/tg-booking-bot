@@ -7,6 +7,7 @@ import {EMOJIES, mapOrderStateToEmoji} from "../../utils/Emojies";
 import {getUserAndOrderFromCallbackMessage} from "../../utils/Messages";
 import {logger} from "../../utils/Logger";
 import {ERROR_MESSAGE} from "../../config";
+import {ActionType} from "../../utils/Actions";
 
 export const myBookingsController = async (ctx: Context) => {
     try {
@@ -18,8 +19,8 @@ export const myBookingsController = async (ctx: Context) => {
 
             const renderOrders = generateInlineKeyboard<IOrder>(user.booked || [], {
                 textGetter: order => `${dateFormatter.format(order.date)} ${order.bookingType === 'CONFIRMED'? EMOJIES.GREEN_CIRCLE : EMOJIES.YELLOW_CIRCLE}`,
-                rowLength: 3,
-                action: "DROP"
+                rowLength: 2,
+                action: ActionType.Drop
             });
 
             await ctx.reply(`Ваши престоящие заказы. ${EMOJIES.GREEN_CIRCLE} - подтвержденный, ${EMOJIES.YELLOW_CIRCLE} - неподтвержденный. Нажмите на заказ, если хотите отказаться`,
@@ -43,7 +44,7 @@ export const dropOrderController = async (ctx: Context) => {
             const renderOrders = generateInlineKeyboard<IOrder>(user.booked || [], {
                 textGetter: item => `${dateFormatter.format(item.date)} ${mapOrderStateToEmoji(item)}`,
                 rowLength: 2,
-                action: "DROP"
+                action: ActionType.Drop
             });
 
             await ctx.editMessageReplyMarkup({inline_keyboard: renderOrders})

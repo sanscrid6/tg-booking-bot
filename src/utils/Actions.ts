@@ -1,2 +1,5 @@
-// todo make enum
-export type Actions = 'BOOK' | 'DROP' | 'CONFIRM';
+export enum ActionType {
+    Book='Book',
+    Drop='Drop',
+    Confirm='Confirm',
+}

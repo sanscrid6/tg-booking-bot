@@ -9,6 +9,7 @@ import {Settings} from "luxon";
 import {dropOrderController, myBookingsController} from "./controllers/profile";
 import {bot} from "./telegraf";
 import {scheduleJobs} from "./workers/executor";
+import {ActionType} from "./utils/Actions";
 
 const main = async () => {
     Settings.defaultZone = TIMEZONE;
@@ -22,8 +23,8 @@ const main = async () => {
     bot.hears('/test', testController)
     ///\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/
 
-    bot.action(/^[\w\d]{24}BOOK$/, dateController);
-    bot.action(/^[\w\d]{24}DROP$/, dropOrderController)
+    bot.action(new RegExp(`^[\\w\\d]{24}${ActionType.Book}$`), dateController);
+    bot.action(new RegExp(`^[\\w\\d]{24}${ActionType.Drop}$`), dropOrderController);
 
     bot.launch();
     logger.info('bot started');

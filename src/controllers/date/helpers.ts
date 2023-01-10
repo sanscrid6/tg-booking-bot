@@ -3,6 +3,7 @@ import {DateTime} from "luxon";
 import {dateFormatter} from "../../utils/Formatters";
 import {mapOrderStateToEmoji} from "../../utils/Emojies";
 import {generateInlineKeyboard} from "../../utils/Keyboard";
+import {ActionType} from "../../utils/Actions";
 
 export const getActualDates = async () => {
     const orders = await Order.find({date: {$gt: DateTime.local().toISODate()}});
@@ -10,6 +11,6 @@ export const getActualDates = async () => {
     return generateInlineKeyboard<IOrder>(orders, {
         textGetter: order => `${dateFormatter.format(order.date)} ${mapOrderStateToEmoji(order)}`,
         rowLength: 2,
-        action: "BOOK"
+        action: ActionType.Book
     });
 }
