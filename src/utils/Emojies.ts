@@ -16,3 +16,12 @@ export const mapOrderStateToEmoji = (order: IOrder) => {
             return EMOJIES.GREEN_CIRCLE;
     }
 }
+
+export const mapUserOrderStateToEmoji = (order: IOrder) => {
+        switch (order.bookingType) {
+            case "BOOKED":
+                return EMOJIES.YELLOW_CIRCLE;
+            case "CONFIRMED":
+                return EMOJIES.GREEN_CIRCLE;
+        }
+    }

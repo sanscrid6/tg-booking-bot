@@ -1,5 +1,4 @@
 import {Schema, model, Document} from "mongoose";
-import {User} from "./User";
 import {wishesMiddleware} from "../middlevares/OrderMiddleware";
 
 export interface IOrder extends Document{
