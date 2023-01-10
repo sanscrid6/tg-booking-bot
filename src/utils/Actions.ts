@@ -1,1 +1,2 @@
-export type Actions = 'BOOK' | 'DROP';
+// todo make enum
+export type Actions = 'BOOK' | 'DROP' | 'CONFIRM';
