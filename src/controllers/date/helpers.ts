@@ -9,7 +9,7 @@ export const getActualDates = async () => {
 
     return generateInlineKeyboard<IOrder>(orders, {
         textGetter: order => `${dateFormatter.format(order.date)} ${mapOrderStateToEmoji(order)}`,
-        rowLength: 3,
+        rowLength: 2,
         action: "BOOK"
     });
 }

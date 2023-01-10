@@ -9,6 +9,7 @@ export interface IUser extends Document{
     lastName: string,
     username: string,
     role: 'ADMIN' | 'USER',
+    chatId: string,
     history?: IOrder[],
     // очередь для желаний
     wishes?: IOrder[],
@@ -23,6 +24,7 @@ const userSchema = new Schema<IUser>({
     firstName: {type: String, required: true},
     lastName: {type: String, required: true},
     username: {type: String, required: true},
+    chatId: {type: String, required: true},
     role: {type: String, required: true, default: 'USER'},
     history: [{type: Schema.Types.ObjectId, ref: 'Order'}],
     wishes: [{type: Schema.Types.ObjectId, ref: 'Order'}],

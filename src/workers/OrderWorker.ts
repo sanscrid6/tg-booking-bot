@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 
 class OrderWorker{
     async spawnNewOrders(){
-        const daysRange = 31;
+        const daysRange = 14;
         for(let i = 0; i < daysRange; i++){
             const date = DateTime.local().plus({days: i});
             const order = await Order.findOne({date: date.toISODate()});

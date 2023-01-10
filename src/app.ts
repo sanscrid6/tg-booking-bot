@@ -1,18 +1,18 @@
 import {MONGO_CONNECTION, TIMEZONE, TOKEN} from "./config";
 import {connect} from "mongoose";
 import {logger} from "./utils/Logger";
-import {Telegraf} from "telegraf";
+import {Telegraf, Telegram} from "telegraf";
 import {startHandler} from "./controllers/start";
 import {CONTROLLER_TRIGGERS} from "./utils/ControllerTriggers";
 import {dateController, dateListController} from "./controllers/date";
 import {testController} from "./controllers/test";
 import {Settings} from "luxon";
 import {dropOrderController, myBookingsController} from "./controllers/profile";
+import {bot} from "./telegraf";
 
 const main = async () => {
     Settings.defaultZone = TIMEZONE;
     await connect(MONGO_CONNECTION);
-    const bot = new Telegraf(TOKEN);
 
     bot.start(startHandler);
 

@@ -1,11 +1,9 @@
 import {Context, Markup} from "telegraf";
-import {Order} from "../../models/Order";
-import {CallbackQuery} from "typegram/markup";
 import {dateFormatter} from "../../utils/Formatters";
-import {User} from "../../models/User";
 import {logger} from "../../utils/Logger";
 import {getActualDates} from "./helpers";
 import {ERROR_MESSAGE} from "../../config";
+import {getUserAndOrderFromCallbackMessage} from "../../utils/Messages";
 
 export const dateListController = async (ctx: Context) => {
     try {
@@ -20,28 +18,13 @@ export const dateListController = async (ctx: Context) => {
 export const dateController = async (ctx: Context) => {
     try {
         if(ctx.callbackQuery){
-            const callbackQuery = ctx.callbackQuery as CallbackQuery.DataQuery;
-            const orderId = callbackQuery.data.slice(0,24);
-            const userId = callbackQuery.from.id;
-
-            const [user, order] = await Promise.all([
-                User.findById(userId),
-                Order.findById(orderId)
-            ]);
-
-            if(!user){
-                throw new Error(`cant find user with id ${userId}`);
-            }
-
-            if(!order){
-                throw new Error(`cant find order with date ${orderId}`);
-            }
+           const {user, order} = await getUserAndOrderFromCallbackMessage(ctx);
 
             if(order.bookingType !== 'EMPTY') {
-                // todo check user with same id
+                // todo check user with same id and curr date
                 user.wishes = user.wishes ? [...user.wishes, order] : [order];
                 await user.save();
-                await ctx.answerCbQuery(`Вы стали в очкредь на ${dateFormatter.format(order.date)}`);
+                await ctx.answerCbQuery(`Вы стали в очередь на ${dateFormatter.format(order.date)}`);
                 return;
             }
 

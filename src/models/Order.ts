@@ -1,5 +1,6 @@
 import {Schema, model, Document} from "mongoose";
 import {User} from "./User";
+import {wishesMiddleware} from "../middlevares/OrderMiddlewares";
 
 export interface IOrder extends Document{
     date: Date,
@@ -15,10 +16,7 @@ const userSchema = new Schema<IOrder>({
     bookingType: {type: String, required: true, default: 'EMPTY'},
 });
 
-userSchema.post('save', async doc => {
-   const users = await User.find({wishes: doc._id}).populate('wishes');
-   console.log(users, 'users');
-})
+userSchema.post('save', wishesMiddleware)
 
 export const Order = model<IOrder>('Order', userSchema);
 
