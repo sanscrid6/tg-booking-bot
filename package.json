@@ -1,12 +1,14 @@
 {
   "dependencies": {
+    "@types/luxon": "^3.2.0",
+    "@types/node-schedule": "^2.1.0",
     "dotenv": "^16.0.3",
     "luxon": "^3.2.1",
     "mongoose": "^6.8.2",
+    "node-schedule": "^2.1.0",
     "telegraf": "^4.11.2",
-    "tslog": "^4.7.1",
     "ts-node": "^10.9.1",
-    "@types/luxon": "^3.2.0"
+    "tslog": "^4.7.1"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",

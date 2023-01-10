@@ -7,6 +7,7 @@ import {CONTROLLER_TRIGGERS} from "./utils/ControllerTriggers";
 import {dateController, dateListController} from "./controllers/date";
 import {testController} from "./controllers/test";
 import {Settings} from "luxon";
+import {dropOrderController, myBookingsController} from "./controllers/profile";
 
 const main = async () => {
     Settings.defaultZone = TIMEZONE;
@@ -16,9 +17,12 @@ const main = async () => {
     bot.start(startHandler);
 
     bot.hears(CONTROLLER_TRIGGERS.DATES_LIST, dateListController);
+    bot.hears(CONTROLLER_TRIGGERS.MY_BOOKINGS, myBookingsController);
     bot.hears('/test', testController)
     ///\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/
-    bot.action(/^[\w\d]{24}$/, dateController)
+
+    bot.action(/^[\w\d]{24}BOOK$/, dateController);
+    bot.action(/^[\w\d]{24}DROP$/, dropOrderController)
 
     bot.launch();
     logger.info('bot started');

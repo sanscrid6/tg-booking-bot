@@ -3,7 +3,6 @@ import {logger} from "../utils/Logger";
 import { DateTime } from "luxon";
 
 class OrderWorker{
-    // todo timezone
     async spawnNewOrders(){
         const daysRange = 31;
         for(let i = 0; i < daysRange; i++){

@@ -23,9 +23,10 @@ export const startHandler = async (ctx: Context) => {
         logger.error(`cant get id from ${ctx.from}`);
     }
 
-    return ctx.reply('Custom buttons keyboard', Markup
+    return ctx.reply(`Привет`, Markup
         .keyboard([
             [CONTROLLER_TRIGGERS.DATES_LIST],
+            [CONTROLLER_TRIGGERS.MY_BOOKINGS],
         ])
         .oneTime()
         .resize()

@@ -1,4 +1,4 @@
-import {Schema, model} from "mongoose";
+import {Schema, model, Document} from "mongoose";
 import {IOrder} from "./Order";
 
 // todo check if bot has access to all fields
@@ -24,10 +24,10 @@ const userSchema = new Schema<IUser>({
     lastName: {type: String, required: true},
     username: {type: String, required: true},
     role: {type: String, required: true, default: 'USER'},
-    history: [{type: String, ref: 'Order'}],
-    wishes: [{type: String, ref: 'Order'}],
-    booked: [{type: String, ref: 'Order'}],
-    confirmed: [{type: String, ref: 'Order'}],
+    history: [{type: Schema.Types.ObjectId, ref: 'Order'}],
+    wishes: [{type: Schema.Types.ObjectId, ref: 'Order'}],
+    booked: [{type: Schema.Types.ObjectId, ref: 'Order'}],
+    confirmed: [{type: Schema.Types.ObjectId, ref: 'Order'}],
 });
 
 export const User = model<IUser>('User', userSchema);
