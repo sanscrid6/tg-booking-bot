@@ -11,8 +11,11 @@ class OrderWorker{
         try {
             const daysRange = 14;
             for(let i = 0; i < daysRange; i++){
-                const date = DateTime.local().plus({days: i});
-                const order = await Order.findOne({date: date.toISODate()});
+                const date = DateTime
+                    .local()
+                    .set({hour: 0, minute: 1, second: 0, millisecond: 0})
+                    .plus({days: i});
+                const order = await Order.findOne({date: date.toISO()});
 
                 if(!order){
                     await Order.create({
@@ -30,11 +33,11 @@ class OrderWorker{
 
     async sendConfirmations(){
         try {
-            const verificationDelay = 2;
-            const verificationDate = DateTime.local().plus({days: verificationDelay});
+            const confirmationDelay = 2;
+            const confirmationDateMax = DateTime.local().plus({days: confirmationDelay});
             const orders = await Order.find({date: {
                     $gte: DateTime.local().toISODate(),
-                    $lt: verificationDate
+                    $lt: confirmationDateMax
                 }});
             for(const order of orders){
                 // должен быть только один польователь
@@ -60,8 +63,44 @@ class OrderWorker{
         }
     }
 
+    // todo test
     async checkOrderConfirmed(){
+        try {
+            const verificationDelay = 1;
+            const verificationDate = DateTime.local().plus({days: verificationDelay});
+            const orders = await Order.find({
+                date: {
+                    $gte: DateTime.local().toISODate(),
+                    $lt: verificationDate
+                },
+                bookingType: 'BOOKED'
+            });
 
+            for(const order of orders){
+                order.bookingType = 'EMPTY';
+                await order.save()
+
+                const userWhoBooked = await User.findOne({booked: order._id});
+                if(userWhoBooked){
+                    userWhoBooked.booked = userWhoBooked.booked?.filter(item => item.id !== order.id) ?? [];
+                    await userWhoBooked.save();
+                }
+
+                const users = await User.find({wishes: order._id});
+
+                if(!users){
+                    continue;
+                }
+
+                for(const user of users){
+                    await bot.telegram.sendMessage(+user.chatId, `Заказ на ${dateFormatter.format(order.date)} свободен`);
+                }
+            }
+            logger.info('sending confirmations');
+        } catch (e) {
+            logger.error(`confirmation error`);
+            logger.error(e);
+        }
     }
 }
 
