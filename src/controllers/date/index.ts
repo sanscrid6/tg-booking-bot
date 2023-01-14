@@ -1,5 +1,5 @@
 import {Context, Markup} from "telegraf";
-import {dateFormatter} from "../../utils/Formatters";
+import {dateFormatter, localDate} from "../../utils/Formatters";
 import {logger} from "../../utils/Logger";
 import {getActualDates} from "./helpers";
 import {ERROR_MESSAGE} from "../../config";
@@ -8,6 +8,8 @@ import {generateInlineKeyboard} from "../../utils/Keyboard";
 import {IOrder} from "../../models/Order";
 import {mapUserOrderStateToEmoji} from "../../utils/Emojies";
 import {ActionType} from "../../utils/Actions";
+import {DateTime} from "luxon";
+import {CONTROLLER_TRIGGERS} from "../../utils/ControllerTriggers";
 
 export const dateListController = async (ctx: Context) => {
     try {
@@ -22,10 +24,25 @@ export const dateListController = async (ctx: Context) => {
 export const bookOrderController = async (ctx: Context) => {
     try {
         if(ctx.callbackQuery){
-           const {user, order} = await getUserAndOrderFromCallbackMessage(ctx);
+            const {user, order} = await getUserAndOrderFromCallbackMessage(ctx, ['booked', 'wishes']);
+
+            if(DateTime.fromISO(order.date.toISOString()) < localDate){
+                await ctx.answerCbQuery(`Обновите список достпуных дат нажав "${CONTROLLER_TRIGGERS.DATES_LIST}"`);
+                return;
+            }
+
+            if(order.bookingType === 'BOOKED'){
+                const booked = user.booked;
+
+                if(booked){
+                    if(booked.find(booked => booked.id === order.id)){
+                        await ctx.answerCbQuery(`Вы уже забронировали ${dateFormatter.format(order.date)}`);
+                        return;
+                    }
+                }
+            }
 
             if(order.bookingType !== 'EMPTY') {
-                // todo check user with same id and curr date
                 user.wishes = user.wishes ? [...user.wishes, order] : [order];
                 await user.save();
                 await ctx.answerCbQuery(`Вы стали в очередь на ${dateFormatter.format(order.date)}`);

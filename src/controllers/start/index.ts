@@ -21,7 +21,7 @@ export const startHandler = async (ctx: Context) => {
 
                 logger.info(`create new user ${ctx.from.id}`);
             }
-            // todo test user
+
             const userKeyboard = [
                 [CONTROLLER_TRIGGERS.DATES_LIST],
                 [CONTROLLER_TRIGGERS.MY_BOOKINGS],
