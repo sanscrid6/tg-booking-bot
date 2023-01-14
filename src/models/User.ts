@@ -5,9 +5,9 @@ import {IOrder} from "./Order";
 
 export interface IUser extends Document{
     _id: string,
-    firstName: string,
-    lastName: string,
-    username: string,
+    firstName?: string,
+    lastName?: string,
+    username?: string,
     role: 'ADMIN' | 'USER',
     chatId: string,
     history?: IOrder[],
@@ -21,9 +21,9 @@ export interface IUser extends Document{
 
 const userSchema = new Schema<IUser>({
     _id: {type: String, required: true},
-    firstName: {type: String, required: true},
-    lastName: {type: String, required: true},
-    username: {type: String, required: true},
+    firstName: {type: String, },
+    lastName: {type: String, },
+    username: {type: String, },
     chatId: {type: String, required: true},
     role: {type: String, required: true, default: 'USER'},
     history: [{type: Schema.Types.ObjectId, ref: 'Order'}],
