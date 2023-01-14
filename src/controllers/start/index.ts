@@ -41,7 +41,7 @@ export const startHandler = async (ctx: Context) => {
                 keyboard.push(...adminKeyboard);
             }
 
-            await ctx.reply('qw', Markup
+            await ctx.reply(`Привет ${ctx.from.first_name}`, Markup
                 .keyboard(keyboard)
                 .resize());
 

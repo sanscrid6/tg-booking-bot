@@ -18,14 +18,19 @@ import {scheduleJobs} from "./workers/executor";
 import {ActionType} from "./utils/Actions";
 import {todayConfirmedController} from "./controllers/admin";
 import {adminMiddleware} from "./middlevares/AdminMiddleware";
+import {initDb} from "./Db";
 
 const main = async () => {
     Settings.defaultZone = TIMEZONE;
-    await connect(MONGO_CONNECTION);
+
+    await initDb();
 
     bot.start(startHandler);
 
     bot.use(adminMiddleware);
+    bot.catch((err, ctx) => {
+        logger.error(err);
+    })
 
     bot.hears(CONTROLLER_TRIGGERS.DATES_LIST, dateListController);
     bot.hears(CONTROLLER_TRIGGERS.MY_BOOKINGS, myBookingsController);

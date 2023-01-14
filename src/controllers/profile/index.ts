@@ -15,15 +15,16 @@ export const myBookingsController = async (ctx: Context) => {
             const user = await User.findById(ctx.from.id).populate(['booked', 'confirmed']);
 
             if(!user){
-                return;
+                throw new Error(`cant find user with id ${ctx.from.id}`);
             }
 
             const booked = user.booked || [];
             const confirmed = user.confirmed || [];
             const allOrders = [...booked, ...confirmed];
-            // todo order by date
+
             const comparer = (a: IOrder, b: IOrder) =>
-                DateTime.fromISO(b.date.toString()).diff(DateTime.fromISO(a.date.toString()), 'days').days
+                DateTime.fromISO(a.date.toISOString()).diff(DateTime.fromISO(b.date.toISOString()), 'days').days;
+
             allOrders.sort(comparer)
 
             const renderOrders = generateInlineKeyboard<IOrder>(allOrders, {
