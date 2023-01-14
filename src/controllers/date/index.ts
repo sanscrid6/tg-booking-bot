@@ -6,7 +6,7 @@ import {ERROR_MESSAGE} from "../../config";
 import {getUserAndOrderFromCallbackMessage} from "../../utils/Messages";
 import {generateInlineKeyboard} from "../../utils/Keyboard";
 import {IOrder} from "../../models/Order";
-import {mapOrderStateToEmoji, mapUserOrderStateToEmoji} from "../../utils/Emojies";
+import {mapUserOrderStateToEmoji} from "../../utils/Emojies";
 import {ActionType} from "../../utils/Actions";
 
 export const dateListController = async (ctx: Context) => {

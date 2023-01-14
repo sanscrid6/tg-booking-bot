@@ -3,7 +3,7 @@ import {logger} from "../utils/Logger";
 import { DateTime } from "luxon";
 import {User} from "../models/User";
 import {bot} from "../telegraf";
-import {dateFormatter} from "../utils/Formatters";
+import {dateFormatter, localDate} from "../utils/Formatters";
 import {ActionType} from "../utils/Actions";
 
 class OrderWorker{
@@ -11,10 +11,7 @@ class OrderWorker{
         try {
             const daysRange = 14;
             for(let i = 0; i < daysRange; i++){
-                const date = DateTime
-                    .local()
-                    .set({hour: 0, minute: 1, second: 0, millisecond: 0})
-                    .plus({days: i});
+                const date = localDate.plus({days: i});
                 const order = await Order.findOne({date: date.toISO()});
 
                 if(!order){

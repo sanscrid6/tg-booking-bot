@@ -16,17 +16,21 @@ import {myBookingsController} from "./controllers/profile";
 import {bot} from "./telegraf";
 import {scheduleJobs} from "./workers/executor";
 import {ActionType} from "./utils/Actions";
+import {todayConfirmedController} from "./controllers/admin";
+import {adminMiddleware} from "./middlevares/AdminMiddleware";
 
 const main = async () => {
     Settings.defaultZone = TIMEZONE;
     await connect(MONGO_CONNECTION);
 
     bot.start(startHandler);
-    scheduleJobs();
+
+    bot.use(adminMiddleware);
 
     bot.hears(CONTROLLER_TRIGGERS.DATES_LIST, dateListController);
     bot.hears(CONTROLLER_TRIGGERS.MY_BOOKINGS, myBookingsController);
-    bot.hears('/test', testController)
+    bot.hears(CONTROLLER_TRIGGERS.GET_BOOKED_USER, todayConfirmedController);
+    bot.hears('/test', testController);
 
     bot.action(new RegExp(`^[\\w\\d]{24}${ActionType.Book}$`), bookOrderController);
     bot.action(new RegExp(`^[\\w\\d]{24}${ActionType.Drop}$`), dropOrderController);
@@ -34,6 +38,9 @@ const main = async () => {
     bot.action(new RegExp(`^[\\w\\d]{24}${ActionType.Confirmed}$`), confirmedOrderController);
 
     bot.launch();
+
+    scheduleJobs();
+
     logger.info('bot started');
 
     process.once('SIGINT', () => bot.stop('SIGINT'));
