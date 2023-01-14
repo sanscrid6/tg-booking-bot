@@ -35,7 +35,7 @@ const main = async () => {
     bot.hears(CONTROLLER_TRIGGERS.DATES_LIST, dateListController);
     bot.hears(CONTROLLER_TRIGGERS.MY_BOOKINGS, myBookingsController);
     bot.hears(CONTROLLER_TRIGGERS.GET_BOOKED_USER, todayConfirmedController);
-    bot.hears('/test', testController);
+    // bot.hears('/test', testController);
 
     bot.action(new RegExp(`^[\\w\\d]{24}${ActionType.Book}$`), bookOrderController);
     bot.action(new RegExp(`^[\\w\\d]{24}${ActionType.Drop}$`), dropOrderController);
