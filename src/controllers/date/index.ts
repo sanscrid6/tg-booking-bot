@@ -6,7 +6,7 @@ import {ERROR_MESSAGE} from "../../config";
 import {getUserAndOrderFromCallbackMessage} from "../../utils/Messages";
 import {generateInlineKeyboard} from "../../utils/Keyboard";
 import {IOrder} from "../../models/Order";
-import {mapUserOrderStateToEmoji} from "../../utils/Emojies";
+import {EMOJIES, mapUserOrderStateToEmoji} from "../../utils/Emojies";
 import {ActionType} from "../../utils/Actions";
 import {DateTime} from "luxon";
 import {CONTROLLER_TRIGGERS} from "../../utils/ControllerTriggers";
@@ -14,7 +14,8 @@ import {CONTROLLER_TRIGGERS} from "../../utils/ControllerTriggers";
 export const dateListController = async (ctx: Context) => {
     try {
         const renderOrders = await getActualDates();
-        await ctx.reply('Доступные даты', Markup.inlineKeyboard(renderOrders));
+        await ctx.reply(`Доступные даты. ${EMOJIES.GREEN_CIRCLE} - свободная дата, ${EMOJIES.YELLOW_CIRCLE} - забронированная, ${EMOJIES.RED_CIRCLE} - подтвержденная`,
+            Markup.inlineKeyboard(renderOrders));
     } catch (e) {
         logger.error(e);
         await ctx.reply(ERROR_MESSAGE);
