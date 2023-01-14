@@ -63,7 +63,6 @@ class OrderWorker{
         }
     }
 
-    // todo test
     async checkOrderConfirmed(){
         try {
             const verificationDelay = 1;
@@ -84,21 +83,12 @@ class OrderWorker{
                 if(userWhoBooked){
                     userWhoBooked.booked = userWhoBooked.booked?.filter(item => item.id !== order.id) ?? [];
                     await userWhoBooked.save();
-                }
-
-                const users = await User.find({wishes: order._id});
-
-                if(!users){
-                    continue;
-                }
-
-                for(const user of users){
-                    await bot.telegram.sendMessage(+user.chatId, `Заказ на ${dateFormatter.format(order.date)} свободен`);
+                    await bot.telegram.sendMessage(+userWhoBooked.chatId, `Бронь на ${dateFormatter.format(order.date)} снимается, так как вы ее не подтвердили`);
                 }
             }
-            logger.info('sending confirmations');
+            logger.info('checking confirmations');
         } catch (e) {
-            logger.error(`confirmation error`);
+            logger.error(`checking confirmations error`);
             logger.error(e);
         }
     }

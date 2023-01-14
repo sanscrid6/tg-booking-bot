@@ -4,6 +4,7 @@ import {TIMEZONE} from "../config";
 
 // todo separate from main app ?
 export const scheduleJobs = () => {
-    schedule.scheduleJob({hour: 0, minute: 3, tz: TIMEZONE}, orderWorker.spawnNewOrders)
-    schedule.scheduleJob({hour: 0, minute: 3, tz: TIMEZONE}, orderWorker.sendConfirmations)
+    schedule.scheduleJob({hour: 0, minute: 3, tz: TIMEZONE}, orderWorker.spawnNewOrders);
+    schedule.scheduleJob({hour: 0, minute: 4, tz: TIMEZONE}, orderWorker.sendConfirmations);
+    schedule.scheduleJob({hour: 0, minute: 5, tz: TIMEZONE}, orderWorker.checkOrderConfirmed);
 };
