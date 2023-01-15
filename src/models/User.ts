@@ -1,8 +1,6 @@
 import {Schema, model, Document} from "mongoose";
 import {IOrder} from "./Order";
 
-// todo check if bot has access to all fields
-
 export interface IUser extends Document{
     _id: string,
     firstName?: string,

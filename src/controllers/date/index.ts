@@ -93,7 +93,6 @@ export const dropOrderController = async (ctx: Context) => {
     }
 }
 
-// todo быстро покликать на все коллбэки
 export const confirmOrderController = async (ctx: Context) => {
     try {
         if(ctx.callbackQuery){

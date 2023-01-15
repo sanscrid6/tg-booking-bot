@@ -24,11 +24,12 @@ export const startHandler = async (ctx: Context) => {
 
             if(user.phoneNumber){
                 const keyboard = getKeyboard(ctx.state.user);
-                await ctx.sendMessage(`С возвращением ${ctx.from.first_name}`, Markup.keyboard(keyboard))
+                await ctx.sendMessage(`С возвращением ${ctx.from.first_name}`, Markup
+                    .keyboard(keyboard)
+                    .resize())
             } else {
                 await ctx.reply(`Привет ${ctx.from.first_name}, для работы с данным ботом необходимо подтвердить номер телефона`, Markup
                     .keyboard( [{request_contact: true, text: 'Подтвердить номер телефона'}])
-                    .oneTime()
                     .resize());
             }
         }

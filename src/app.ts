@@ -19,6 +19,7 @@ import {todayConfirmedController} from "./controllers/admin";
 import {adminMiddleware} from "./middlevares/AdminMiddleware";
 import {initDb} from "./Db";
 import {phoneVerificationController} from "./controllers/phoneVerification";
+import {makeAdminController} from "./controllers/command";
 
 
 const main = async () => {
@@ -35,7 +36,8 @@ const main = async () => {
     bot.start(startHandler);
 
     bot.on('contact', phoneVerificationController);
-    // bot.on('contact', () => {})
+
+    bot.command('makeAdmin', makeAdminController);
 
     bot.hears(CONTROLLER_TRIGGERS.DATES_LIST, dateListController);
     bot.hears(CONTROLLER_TRIGGERS.MY_BOOKINGS, myBookingsController);

@@ -15,7 +15,9 @@ export const phoneVerificationController = async (ctx: IContext) => {
 
         const keyboard = getKeyboard(ctx.state.user);
 
-        await ctx.sendMessage('Вы успешно подтвердити номер телефона', Markup.keyboard(keyboard))
+        await ctx.sendMessage('Вы успешно подтвердити номер телефона', Markup
+            .keyboard(keyboard)
+            .resize())
     } catch (e) {
         logger.error('phone verification error');
         logger.error(e);

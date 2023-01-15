@@ -42,7 +42,7 @@ class OrderWorker{
                 if(!user){
                     continue;
                 }
-                await bot.telegram.sendMessage(+user.chatId, `Нажмите на сообщение ниже чтобы подтверить`, {
+                await bot.telegram.sendMessage(+user.chatId, `Нажмите на сообщение ниже, чтобы подтверить`, {
                     reply_markup: {
                         inline_keyboard: [[
                             {

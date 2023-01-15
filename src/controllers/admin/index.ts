@@ -22,13 +22,14 @@ export const todayConfirmedController = async (ctx: IContext) => {
         const user = await User.findOne({confirmed: order._id});
 
         if(!user){
-            await ctx.reply('На сегодня нет броней')
+            await ctx.reply('На сегодня нет броней');
         }
         else{
-            await ctx.reply(`Подтверждена бронь на ${dateFormatter.format(order.date)}, ${user.firstName} ${user.lastName} ${user.username}`);
+            await ctx.reply(`Подтверждена бронь на ${dateFormatter.format(order.date)}, ${user.firstName} ${user.lastName}, телефон - ${user.phoneNumber}`);
         }
     } catch (e) {
-        logger.error('today confirmed')
+        logger.error('today confirmed error');
+        logger.error(e);
         await ctx.reply(ERROR_MESSAGE);
     }
 }
