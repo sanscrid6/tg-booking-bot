@@ -1,5 +1,4 @@
-import {MONGO_CONNECTION, TIMEZONE, TOKEN} from "./config";
-import {connect} from "mongoose";
+import {TIMEZONE} from "./config";
 import {logger} from "./utils/Logger";
 import {startHandler} from "./controllers/start";
 import {CONTROLLER_TRIGGERS} from "./utils/ControllerTriggers";
@@ -19,23 +18,29 @@ import {ActionType} from "./utils/Actions";
 import {todayConfirmedController} from "./controllers/admin";
 import {adminMiddleware} from "./middlevares/AdminMiddleware";
 import {initDb} from "./Db";
+import {phoneVerificationController} from "./controllers/phoneVerification";
+
 
 const main = async () => {
     Settings.defaultZone = TIMEZONE;
 
     await initDb();
 
-    bot.start(startHandler);
-
     bot.use(adminMiddleware);
+
     bot.catch((err, ctx) => {
         logger.error(err);
     })
 
+    bot.start(startHandler);
+
+    bot.on('contact', phoneVerificationController);
+    // bot.on('contact', () => {})
+
     bot.hears(CONTROLLER_TRIGGERS.DATES_LIST, dateListController);
     bot.hears(CONTROLLER_TRIGGERS.MY_BOOKINGS, myBookingsController);
     bot.hears(CONTROLLER_TRIGGERS.GET_BOOKED_USER, todayConfirmedController);
-    // bot.hears('/test', testController);
+    bot.hears('/test', testController);
 
     bot.action(new RegExp(`^[\\w\\d]{24}${ActionType.Book}$`), bookOrderController);
     bot.action(new RegExp(`^[\\w\\d]{24}${ActionType.Drop}$`), dropOrderController);

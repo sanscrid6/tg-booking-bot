@@ -13,6 +13,10 @@ import {CONTROLLER_TRIGGERS} from "../../utils/ControllerTriggers";
 
 export const dateListController = async (ctx: Context) => {
     try {
+        if(!ctx.state.user.phoneNumber){
+            return;
+        }
+
         const renderOrders = await getActualDates();
         await ctx.reply(`Доступные даты. ${EMOJIES.GREEN_CIRCLE} - свободная дата, ${EMOJIES.YELLOW_CIRCLE} - забронированная, ${EMOJIES.RED_CIRCLE} - подтвержденная`,
             Markup.inlineKeyboard(renderOrders));

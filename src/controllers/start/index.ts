@@ -8,10 +8,9 @@ import {ERROR_MESSAGE} from "../../config";
 export const startHandler = async (ctx: Context) => {
     try {
         if(ctx.from){
-            let user = await User.findById(ctx.from.id);
-
+            const user = await User.findById(ctx.from.id);
             if(!user){
-                user = await User.create({
+                 await User.create({
                     _id: ctx.from.id,
                     firstName: ctx.from.first_name,
                     lastName: ctx.from.last_name,
@@ -22,27 +21,9 @@ export const startHandler = async (ctx: Context) => {
                 logger.info(`create new user ${ctx.from.id}`);
             }
 
-            const userKeyboard = [
-                [CONTROLLER_TRIGGERS.DATES_LIST],
-                [CONTROLLER_TRIGGERS.MY_BOOKINGS],
-            ];
-            const adminKeyboard = [
-                [CONTROLLER_TRIGGERS.GET_BOOKED_USER]
-            ]
-
-            if(!user){
-                throw new Error('cant find or create user');
-            }
-
-            const keyboard = [
-                ...userKeyboard,
-            ]
-            if(user.role === 'ADMIN'){
-                keyboard.push(...adminKeyboard);
-            }
-
             await ctx.reply(`Привет ${ctx.from.first_name}`, Markup
-                .keyboard(keyboard)
+                .keyboard( [{request_contact: true, text: 'Подтвердить номер телефона'}])
+                .oneTime()
                 .resize());
 
         }

@@ -12,6 +12,10 @@ import {DateTime} from "luxon";
 export const myBookingsController = async (ctx: Context) => {
     try {
         if(ctx.from){
+            if(!ctx.state.user.phoneNumber){
+                return;
+            }
+
             const user = await User.findById(ctx.from.id).populate(['booked', 'confirmed']);
 
             if(!user){

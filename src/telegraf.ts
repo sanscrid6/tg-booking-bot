@@ -1,4 +1,10 @@
-import {Telegraf} from "telegraf";
+import {Telegraf, Context} from "telegraf";
 import {TOKEN} from "./config";
+import {IUser} from "./models/User";
 
-export const bot = new Telegraf(TOKEN);
+export interface IContext extends Context{
+    user?: IUser,
+}
+
+export const bot = new Telegraf<IContext>(TOKEN);
+
