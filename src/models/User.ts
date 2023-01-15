@@ -9,7 +9,7 @@ export interface IUser extends Document{
     phoneNumber?: string,
     role: 'ADMIN' | 'USER',
     chatId: string,
-    history?: IOrder[],
+    // history?: IOrder[],
     // очередь для желаний
     wishes?: IOrder[],
     // для забронированных
@@ -26,7 +26,7 @@ const userSchema = new Schema<IUser>({
     phoneNumber: {type: String, },
     chatId: {type: String, required: true},
     role: {type: String, required: true, default: 'USER'},
-    history: [{type: Schema.Types.ObjectId, ref: 'Order'}],
+    // history: [{type: Schema.Types.ObjectId, ref: 'Order'}],
     wishes: [{type: Schema.Types.ObjectId, ref: 'Order'}],
     booked: [{type: Schema.Types.ObjectId, ref: 'Order'}],
     confirmed: [{type: Schema.Types.ObjectId, ref: 'Order'}],

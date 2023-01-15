@@ -2,7 +2,7 @@ import {Context, Markup} from "telegraf";
 import {User} from "../../models/User";
 import {generateInlineKeyboard} from "../../utils/Keyboard";
 import {IOrder} from "../../models/Order";
-import {dateFormatter} from "../../utils/Formatters";
+import {dateFormatter, localDate} from "../../utils/Formatters";
 import {EMOJIES, mapUserOrderStateToEmoji} from "../../utils/Emojies";
 import {logger} from "../../utils/Logger";
 import {ERROR_MESSAGE} from "../../config";
@@ -24,12 +24,12 @@ export const myBookingsController = async (ctx: Context) => {
 
             const booked = user.booked || [];
             const confirmed = user.confirmed || [];
-            const allOrders = [...booked, ...confirmed];
+            let allOrders = [...booked, ...confirmed];
 
             const comparer = (a: IOrder, b: IOrder) =>
                 DateTime.fromISO(a.date.toISOString()).diff(DateTime.fromISO(b.date.toISOString()), 'days').days;
 
-            allOrders.sort(comparer)
+            allOrders = allOrders.filter(order => DateTime.fromISO(order.date.toISOString()) > localDate).sort(comparer)
 
             const renderOrders = generateInlineKeyboard<IOrder>(allOrders, {
                 textGetter: order => `${dateFormatter.format(order.date)} ${mapUserOrderStateToEmoji(order)}`,
