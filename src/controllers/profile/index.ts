@@ -13,6 +13,7 @@ export const myBookingsController = async (ctx: Context) => {
     try {
         if(ctx.from){
             if(!ctx.state.user.phoneNumber){
+                await ctx.reply('Вы не подтвердили свой номер телефона');
                 return;
             }
 
@@ -29,7 +30,7 @@ export const myBookingsController = async (ctx: Context) => {
             const comparer = (a: IOrder, b: IOrder) =>
                 DateTime.fromISO(a.date.toISOString()).diff(DateTime.fromISO(b.date.toISOString()), 'days').days;
 
-            allOrders = allOrders.filter(order => DateTime.fromISO(order.date.toISOString()) > localDate).sort(comparer)
+            allOrders = allOrders.filter(order => DateTime.fromISO(order.date.toISOString()) >= localDate).sort(comparer)
 
             const renderOrders = generateInlineKeyboard<IOrder>(allOrders, {
                 textGetter: order => `${dateFormatter.format(order.date)} ${mapUserOrderStateToEmoji(order)}`,

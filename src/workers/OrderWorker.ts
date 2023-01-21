@@ -76,7 +76,7 @@ class OrderWorker{
                 order.bookingType = 'EMPTY';
                 await order.save()
 
-                const userWhoBooked = await User.findOne({booked: order._id});
+                const userWhoBooked = await User.findOne({booked: order._id}).populate('booked');
                 if(userWhoBooked){
                     userWhoBooked.booked = userWhoBooked.booked?.filter(item => item.id !== order.id) ?? [];
                     await userWhoBooked.save();

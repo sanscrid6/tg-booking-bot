@@ -14,6 +14,7 @@ import {CONTROLLER_TRIGGERS} from "../../utils/ControllerTriggers";
 export const dateListController = async (ctx: Context) => {
     try {
         if(!ctx.state.user.phoneNumber){
+            await ctx.reply('Вы не подтвердили свой номер телефона');
             return;
         }
 
@@ -29,38 +30,43 @@ export const dateListController = async (ctx: Context) => {
 export const bookOrderController = async (ctx: Context) => {
     try {
         if(ctx.callbackQuery){
-            const {user, order} = await getUserAndOrderFromCallbackMessage(ctx, ['booked', 'wishes']);
+            const {user, order} = await getUserAndOrderFromCallbackMessage(ctx, ['booked', 'wishes', 'confirmed']);
+            const orderDate = DateTime.fromISO(order.date.toISOString());
 
-            if(DateTime.fromISO(order.date.toISOString()) < localDate){
+            if(orderDate < localDate){
                 await ctx.answerCbQuery(`Обновите список достпуных дат нажав "${CONTROLLER_TRIGGERS.DATES_LIST}"`);
-                return;
             }
-
-            if(order.bookingType === 'BOOKED'){
+            else if(orderDate.diff(localDate, 'days').days === 0){
+                user.confirmed = user.confirmed ? [...user.confirmed, order] : [order];
+                order.bookingType = 'CONFIRMED';
+                await Promise.all([user.save(), order.save()]);
+                await ctx.answerCbQuery(`Вы подтвердили заказ на ${dateFormatter.format(order.date)}`);
+            }
+            else if(order.bookingType === 'BOOKED'){
                 const booked = user.booked;
 
                 if(booked){
                     if(booked.find(booked => booked.id === order.id)){
                         await ctx.answerCbQuery(`Вы уже забронировали ${dateFormatter.format(order.date)}`);
-                        return;
                     }
                 }
             }
-
-            if(order.bookingType !== 'EMPTY') {
+            else if(order.bookingType !== 'EMPTY') {
                 user.wishes = user.wishes ? [...user.wishes, order] : [order];
                 await user.save();
                 await ctx.answerCbQuery(`Вы стали в очередь на ${dateFormatter.format(order.date)}`);
-                return;
+            }
+            else if(order.bookingType === 'EMPTY'){
+                order.bookingType = 'BOOKED';
+                user.booked = user.booked ? [...user.booked, order] : [order];
+                user.wishes = user.wishes?.filter(wish => wish !== order._id);
+
+                await Promise.all([order.save(), user.save()]);
+                await ctx.answerCbQuery(`Вы успешно забронировали ${dateFormatter.format(order.date)}`);
             }
 
-            order.bookingType = 'BOOKED';
-            user.booked = user.booked ? [...user.booked, order] : [order];
-
-            await Promise.all([order.save(), user.save()]);
             const renderOrders = await getActualDates();
-            await ctx.editMessageReplyMarkup({inline_keyboard: renderOrders})
-            await ctx.answerCbQuery(`Вы успешно забронировали ${dateFormatter.format(order.date)}`);
+            await ctx.editMessageReplyMarkup({inline_keyboard: renderOrders});
         }
     } catch (e) {
         logger.error(e);
