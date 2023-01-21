@@ -1,6 +1,7 @@
 import { Logger } from "tslog";
 import { createStream } from "rotating-file-stream";
 import {localDate} from "./Formatters";
+import {DateTime} from "luxon";
 
 const stream = createStream("logs/bot.log", {
     size: "10M",
@@ -11,7 +12,7 @@ const stream = createStream("logs/bot.log", {
 const logger = new Logger();
 logger.attachTransport((logObj) => {
     delete logObj._meta;
-    stream.write(localDate.toISODate() + ' | ' +  JSON.stringify(logObj) + "\n");
+    stream.write(DateTime.local().toISO() + ' | ' +  JSON.stringify(logObj) + "\n");
 })
 
 export default logger;
