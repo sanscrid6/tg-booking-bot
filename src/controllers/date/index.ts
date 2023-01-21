@@ -1,7 +1,7 @@
 import {Context, Markup} from "telegraf";
 import {dateFormatter, localDate} from "../../utils/Formatters";
 import {logger} from "../../utils/Logger";
-import {getActualDates} from "./helpers";
+import {getActualDates, getUserOrders} from "./helpers";
 import {ERROR_MESSAGE} from "../../config";
 import {getUserAndOrderFromCallbackMessage} from "../../utils/Messages";
 import {generateInlineKeyboard} from "../../utils/Keyboard";
@@ -37,8 +37,16 @@ export const bookOrderController = async (ctx: Context) => {
                 await ctx.answerCbQuery(`Обновите список достпуных дат нажав "${CONTROLLER_TRIGGERS.DATES_LIST}"`);
             }
             else if(order.bookingType !== 'EMPTY') {
-                user.wishes = user.wishes ? [...user.wishes, order] : [order];
-                await user.save();
+                const booked = [...(user.booked || []), ...(user.confirmed || [])];
+
+                if(booked && booked.find(booked => booked.id === order.id)){
+                    await ctx.answerCbQuery(`Вы уже забронировали ${dateFormatter.format(order.date)}`);
+                }
+                else if (!user.wishes?.find(wish => wish === order._id)){
+                    user.wishes = user.wishes ? [...user.wishes, order] : [order];
+                    await user.save();
+                }
+
                 await ctx.answerCbQuery(`Вы стали в очередь на ${dateFormatter.format(order.date)}`);
             }
             else if(order.bookingType === 'EMPTY'){
@@ -56,15 +64,6 @@ export const bookOrderController = async (ctx: Context) => {
                     await ctx.answerCbQuery(`Вы успешно забронировали ${dateFormatter.format(order.date)}`);
                 }
             }
-            else if(order.bookingType === 'BOOKED'){
-                const booked = user.booked;
-
-                if(booked){
-                    if(booked.find(booked => booked.id === order.id)){
-                        await ctx.answerCbQuery(`Вы уже забронировали ${dateFormatter.format(order.date)}`);
-                    }
-                }
-            }
 
             const renderOrders = await getActualDates();
             await ctx.editMessageReplyMarkup({inline_keyboard: renderOrders});
@@ -79,19 +78,14 @@ export const bookOrderController = async (ctx: Context) => {
 export const dropOrderController = async (ctx: Context) => {
     try {
         if(ctx.callbackQuery){
-            const {user, order} = await getUserAndOrderFromCallbackMessage(ctx, ['booked']);
+            const {user, order} = await getUserAndOrderFromCallbackMessage(ctx, ['booked', 'confirmed']);
 
             order.bookingType = 'EMPTY';
-            user.booked = user.booked?.filter(item => item.id !== order.id) ?? [];
+            user.booked = user.booked?.filter(item => item.id !== order.id);
+            user.confirmed = user.confirmed?.filter(item => item.id !== order.id);
             await Promise.all([order.save(), user.save()]);
 
-            const renderOrders = generateInlineKeyboard<IOrder>(user.booked || [], {
-                textGetter: item => `${dateFormatter.format(item.date)} ${mapUserOrderStateToEmoji(item)}`,
-                rowLength: 2,
-                action: ActionType.Drop
-            });
-
-            await ctx.editMessageReplyMarkup({inline_keyboard: renderOrders})
+            await ctx.editMessageReplyMarkup({inline_keyboard: getUserOrders(user)})
             await ctx.answerCbQuery(`Вы отказались от ${dateFormatter.format(order.date)}`);
         }
     } catch (e) {

@@ -1,13 +1,9 @@
 import {Context, Markup} from "telegraf";
 import {User} from "../../models/User";
-import {generateInlineKeyboard} from "../../utils/Keyboard";
-import {IOrder} from "../../models/Order";
-import {dateFormatter, localDate} from "../../utils/Formatters";
-import {EMOJIES, mapUserOrderStateToEmoji} from "../../utils/Emojies";
+import {EMOJIES} from "../../utils/Emojies";
 import {logger} from "../../utils/Logger";
 import {ERROR_MESSAGE} from "../../config";
-import {ActionType} from "../../utils/Actions";
-import {DateTime} from "luxon";
+import {getUserOrders} from "../date/helpers";
 
 export const myBookingsController = async (ctx: Context) => {
     try {
@@ -23,23 +19,8 @@ export const myBookingsController = async (ctx: Context) => {
                 throw new Error(`cant find user with id ${ctx.from.id}`);
             }
 
-            const booked = user.booked || [];
-            const confirmed = user.confirmed || [];
-            let allOrders = [...booked, ...confirmed];
-
-            const comparer = (a: IOrder, b: IOrder) =>
-                DateTime.fromISO(a.date.toISOString()).diff(DateTime.fromISO(b.date.toISOString()), 'days').days;
-
-            allOrders = allOrders.filter(order => DateTime.fromISO(order.date.toISOString()) >= localDate).sort(comparer)
-
-            const renderOrders = generateInlineKeyboard<IOrder>(allOrders, {
-                textGetter: order => `${dateFormatter.format(order.date)} ${mapUserOrderStateToEmoji(order)}`,
-                rowLength: 2,
-                action: ActionType.Drop
-            });
-
             await ctx.reply(`Ваши престоящие заказы. ${EMOJIES.GREEN_CIRCLE} - подтвержденный, ${EMOJIES.YELLOW_CIRCLE} - неподтвержденный. Нажмите на заказ, если хотите отказаться`,
-                Markup.inlineKeyboard(renderOrders));
+                Markup.inlineKeyboard(getUserOrders(user)));
         }
     } catch (e) {
         logger.error(e);
