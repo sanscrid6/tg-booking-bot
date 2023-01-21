@@ -1,5 +1,5 @@
 import {Order} from "../models/Order";
-import {logger} from "../utils/Logger";
+import logger from "../utils/Logger";
 import { DateTime } from "luxon";
 import {User} from "../models/User";
 import {bot} from "../telegraf";

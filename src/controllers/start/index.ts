@@ -1,6 +1,6 @@
 import {Context, Markup} from "telegraf";
 import {User} from "../../models/User";
-import {logger} from "../../utils/Logger";
+import logger from "../../utils/Logger";
 import {CONTROLLER_TRIGGERS} from "../../utils/ControllerTriggers";
 import {ERROR_MESSAGE} from "../../config";
 import {getKeyboard} from "../../utils/Keyboard";

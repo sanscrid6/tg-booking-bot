@@ -1,6 +1,6 @@
 import {Context, Markup} from "telegraf";
 import {dateFormatter, localDate} from "../../utils/Formatters";
-import {logger} from "../../utils/Logger";
+import logger from "../../utils/Logger";
 import {getActualDates, getUserOrders} from "./helpers";
 import {ERROR_MESSAGE} from "../../config";
 import {getUserAndOrderFromCallbackMessage} from "../../utils/Messages";

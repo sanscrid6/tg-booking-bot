@@ -1,7 +1,7 @@
 import {Context, Markup} from "telegraf";
 import {User} from "../../models/User";
 import {EMOJIES} from "../../utils/Emojies";
-import {logger} from "../../utils/Logger";
+import logger from "../../utils/Logger";
 import {ERROR_MESSAGE} from "../../config";
 import {getUserOrders} from "../date/helpers";
 

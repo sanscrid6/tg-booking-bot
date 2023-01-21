@@ -23,6 +23,8 @@ services:
       - mongo
     restart: on-failure
     command: "yarn start"
+    volumes:
+      - ./logs:/app/logs
 volumes:
   db:
 

@@ -1,4 +1,4 @@
-import {logger} from "../../utils/Logger";
+import logger from "../../utils/Logger";
 import {CONTROLLER_TRIGGERS} from "../../utils/ControllerTriggers";
 import {IContext} from "../../telegraf";
 import {Markup} from "telegraf";

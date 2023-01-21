@@ -2,7 +2,7 @@ import {Context} from "telegraf";
 import {Order} from "../../models/Order";
 import {dateFormatter, localDate} from "../../utils/Formatters";
 import {User} from "../../models/User";
-import {logger} from "../../utils/Logger";
+import logger from "../../utils/Logger";
 import {ERROR_MESSAGE} from "../../config";
 import {IContext} from "../../telegraf";
 

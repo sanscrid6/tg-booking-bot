@@ -1,5 +1,5 @@
 import {TIMEZONE} from "./config";
-import {logger} from "./utils/Logger";
+import logger from "./utils/Logger";
 import {startHandler} from "./controllers/start";
 import {CONTROLLER_TRIGGERS} from "./utils/ControllerTriggers";
 import {

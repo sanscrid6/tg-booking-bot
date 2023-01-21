@@ -1,7 +1,7 @@
 import {IContext} from "../../telegraf";
 import {Message} from "typegram/message";
 import {User} from "../../models/User";
-import {logger} from "../../utils/Logger";
+import logger from "../../utils/Logger";
 import {ERROR_MESSAGE} from "../../config";
 
 export const makeAdminController = async (ctx: IContext) => {
