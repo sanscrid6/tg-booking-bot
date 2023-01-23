@@ -1,6 +1,5 @@
 import { Logger } from "tslog";
 import { createStream } from "rotating-file-stream";
-import {localDate} from "./Formatters";
 import {DateTime} from "luxon";
 
 const stream = createStream("logs/bot.log", {

@@ -50,7 +50,7 @@ export const bookOrderController = async (ctx: Context) => {
                 await ctx.answerCbQuery(`Вы стали в очередь на ${dateFormatter.format(order.date)}`);
             }
             else if(order.bookingType === 'EMPTY'){
-                if(orderDate.diff(localDate, 'days').days === 0){
+                if(orderDate.diff(localDate, 'days').days <= 1){
                     user.confirmed = user.confirmed ? [...user.confirmed, order] : [order];
                     order.bookingType = 'CONFIRMED';
                     await Promise.all([user.save(), order.save()]);
