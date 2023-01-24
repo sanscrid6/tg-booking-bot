@@ -11,7 +11,7 @@ class OrderWorker{
         try {
             const daysRange = 14;
             for(let i = 0; i < daysRange; i++){
-                const date = localDate.plus({days: i});
+                const date = localDate().plus({days: i});
                 const order = await Order.findOne({date: date.toISO()});
 
                 if(!order){

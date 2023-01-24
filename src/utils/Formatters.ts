@@ -5,4 +5,4 @@ export const dateFormatter = Intl.DateTimeFormat('ru', {
     day: 'numeric',
 })
 
-export const localDate = DateTime.local().set({hour: 0, minute: 1, second: 0, millisecond: 0});
+export const localDate = () => DateTime.local().set({hour: 0, minute: 1, second: 0, millisecond: 0});

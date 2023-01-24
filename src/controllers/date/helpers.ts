@@ -25,7 +25,7 @@ export const getUserOrders = (user: IUser) => {
     const comparer = (a: IOrder, b: IOrder) =>
         DateTime.fromISO(a.date.toISOString()).diff(DateTime.fromISO(b.date.toISOString()), 'days').days;
 
-    allOrders = allOrders.filter(order => DateTime.fromISO(order.date.toISOString()) >= localDate).sort(comparer)
+    allOrders = allOrders.filter(order => DateTime.fromISO(order.date.toISOString()) >= localDate()).sort(comparer)
 
     return generateInlineKeyboard<IOrder>(allOrders, {
         textGetter: order => `${dateFormatter.format(order.date)} ${mapUserOrderStateToEmoji(order)}`,

@@ -33,7 +33,7 @@ export const bookOrderController = async (ctx: Context) => {
             const {user, order} = await getUserAndOrderFromCallbackMessage(ctx, ['booked', 'wishes', 'confirmed']);
             const orderDate = DateTime.fromISO(order.date.toISOString());
 
-            if(orderDate < localDate){
+            if(orderDate < localDate()){
                 await ctx.answerCbQuery(`Обновите список достпуных дат нажав "${CONTROLLER_TRIGGERS.DATES_LIST}"`);
             }
             else if(order.bookingType !== 'EMPTY') {
@@ -50,7 +50,7 @@ export const bookOrderController = async (ctx: Context) => {
                 await ctx.answerCbQuery(`Вы стали в очередь на ${dateFormatter.format(order.date)}`);
             }
             else if(order.bookingType === 'EMPTY'){
-                if(orderDate.diff(localDate, 'days').days <= 1){
+                if(orderDate.diff(localDate(), 'days').days <= 2){
                     user.confirmed = user.confirmed ? [...user.confirmed, order] : [order];
                     order.bookingType = 'CONFIRMED';
                     await Promise.all([user.save(), order.save()]);
