@@ -1,5 +1,4 @@
 import logger from "../../utils/Logger";
-import {CONTROLLER_TRIGGERS} from "../../utils/ControllerTriggers";
 import {IContext} from "../../telegraf";
 import {Markup} from "telegraf";
 import {ERROR_MESSAGE} from "../../config";
@@ -10,12 +9,14 @@ export const phoneVerificationController = async (ctx: IContext) => {
     try {
         const contactMsg = ctx.message as Message.ContactMessage;
 
-        ctx.state.user.phoneNumber = contactMsg.contact.phone_number;
+        const number = contactMsg.contact.phone_number.replace(/\s/, '');
+        ctx.state.user.phoneNumber = number.startsWith('+') ? number : `+${number}`;
         ctx.state.user.save();
 
         const keyboard = getKeyboard(ctx.state.user);
 
-        await ctx.sendMessage('Вы успешно подтвердити номер телефона', Markup
+        await ctx.sendMessage('Вы успешно подтвердити номер телефона',
+            Markup
             .keyboard(keyboard)
             .resize())
     } catch (e) {
