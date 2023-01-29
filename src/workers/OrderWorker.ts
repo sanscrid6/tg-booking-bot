@@ -38,7 +38,7 @@ class OrderWorker{
             const confirmationDateMax = DateTime.local().setZone(TIMEZONE).plus({days: confirmationDelay});
             const orders = await Order.find({date: {
                     $gte: DateTime.local().setZone(TIMEZONE).toISODate(),
-                    $lt: confirmationDateMax
+                    $lt: confirmationDateMax.toISODate()
                 }});
             for(const order of orders){
                 // должен быть только один польователь
@@ -71,7 +71,7 @@ class OrderWorker{
             const orders = await Order.find({
                 date: {
                     $gte: DateTime.local().setZone(TIMEZONE).toISODate(),
-                    $lt: verificationDate
+                    $lt: verificationDate.toISODate()
                 },
                 bookingType: 'BOOKED'
             });
