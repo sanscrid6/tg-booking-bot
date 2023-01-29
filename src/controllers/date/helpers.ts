@@ -24,9 +24,13 @@ export const getUserOrders = (user: IUser) => {
     let allOrders = [...booked, ...confirmed];
 
     const comparer = (a: IOrder, b: IOrder) =>
-        DateTime.fromISO(a.date.toISOString()).setZone(TIMEZONE).diff(DateTime.fromISO(b.date.toISOString()).setZone(TIMEZONE), 'days').days;
+        DateTime.fromISO(a.date.toISOString()).diff(DateTime.fromISO(b.date.toISOString()), 'days').days;
 
-    allOrders = allOrders.filter(order => DateTime.fromISO(order.date.toISOString()).setZone(TIMEZONE) >= localDate()).sort(comparer)
+    allOrders = allOrders
+        .filter(order =>
+            DateTime.fromISO(order.date.toISOString()).setZone(TIMEZONE) >=
+            DateTime.local().setZone(TIMEZONE).set({hour: 0, minute: 1, second: 0, millisecond: 0}))
+        .sort(comparer)
 
     return generateInlineKeyboard<IOrder>(allOrders, {
         textGetter: order => `${dateFormatter.format(order.date)} ${mapUserOrderStateToEmoji(order)}`,
