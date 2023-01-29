@@ -1,4 +1,3 @@
-import {TIMEZONE} from "./config";
 import logger from "./utils/Logger";
 import {startHandler} from "./controllers/start";
 import {CONTROLLER_TRIGGERS} from "./utils/ControllerTriggers";
@@ -10,21 +9,18 @@ import {
     dropOrderController
 } from "./controllers/date";
 import {testController} from "./controllers/test";
-import {Settings} from "luxon";
 import {myBookingsController} from "./controllers/profile";
 import {bot} from "./telegraf";
 import {scheduleJobs} from "./workers/executor";
 import {ActionType} from "./utils/Actions";
 import {todayConfirmedController} from "./controllers/admin";
-import {adminMiddleware} from "./middlevares/AdminMiddleware";
+import {adminMiddleware} from "./middlewares/AdminMiddleware";
 import {initDb} from "./Db";
 import {phoneVerificationController} from "./controllers/phoneVerification";
 import {makeAdminController} from "./controllers/command";
 
 
 const main = async () => {
-    Settings.defaultZone = TIMEZONE;
-
     await initDb();
 
     bot.use(adminMiddleware);

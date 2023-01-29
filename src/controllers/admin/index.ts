@@ -13,11 +13,11 @@ export const todayConfirmedController = async (ctx: IContext) => {
             return;
         }
 
-        const date = localDate().toISO()
-        const order = await Order.findOne({date: date.slice(0, date.length - 6)});
+        const date = localDate(false).toISO();
+        const order = await Order.findOne({date});
 
         if(!order){
-            throw new Error(`cant find order on ${date.slice(0, date.length - 6)}`);
+            throw new Error(`cant find order on ${date}`);
         }
 
         const user = await User.findOne({confirmed: order._id});

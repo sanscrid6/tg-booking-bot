@@ -1,5 +1,5 @@
 import {Schema, model, Document} from "mongoose";
-import {wishesMiddleware} from "../middlevares/OrderMiddleware";
+import {wishesMiddleware} from "../middlewares/OrderMiddleware";
 
 export interface IOrder extends Document{
     date: Date,
