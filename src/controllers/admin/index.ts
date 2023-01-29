@@ -26,7 +26,7 @@ export const todayConfirmedController = async (ctx: IContext) => {
             await ctx.reply('На сегодня нет броней');
         }
         else{
-            await ctx.reply(`Подтверждена бронь на ${dateFormatter.format(order.date)}, ${user.firstName} ${user.lastName && user.lastName}, телефон - ${user.phoneNumber}`);
+            await ctx.reply(`Подтверждена бронь на ${dateFormatter.format(order.date)}, ${user.firstName} ${user?.lastName}, телефон - ${user.phoneNumber}`);
         }
     } catch (e) {
         logger.error('today confirmed error');
