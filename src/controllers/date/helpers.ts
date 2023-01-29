@@ -8,7 +8,7 @@ import {IUser} from "../../models/User";
 import {TIMEZONE} from "../../config";
 
 export const getActualDates = async () => {
-    const orders = await Order.find({date: {$gt: localDate().toISODate()}});
+    const orders = await Order.find({date: {$gt: DateTime.local().setZone(TIMEZONE).toISODate()}});
 
     return generateInlineKeyboard<IOrder>(orders, {
         textGetter: order => `${dateFormatter.format(order.date)} ${mapOrderStateToEmoji(order)}`,

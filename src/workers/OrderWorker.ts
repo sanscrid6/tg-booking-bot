@@ -5,13 +5,17 @@ import {User} from "../models/User";
 import {bot} from "../telegraf";
 import {dateFormatter, localDate} from "../utils/Formatters";
 import {ActionType} from "../utils/Actions";
+import {TIMEZONE} from "../config";
 
 class OrderWorker{
     async spawnNewOrders(){
         try {
             const daysRange = 14;
             for(let i = 0; i < daysRange; i++){
-                const date = localDate().plus({days: i});
+                const date = DateTime.local()
+                    .setZone(TIMEZONE)
+                    .set({hour: 0, minute: 1, second: 0, millisecond: 0})
+                    .plus({days: i});
                 const order = await Order.findOne({date: date.toISO()});
 
                 if(!order){
@@ -31,9 +35,9 @@ class OrderWorker{
     async sendConfirmations(){
         try {
             const confirmationDelay = 2;
-            const confirmationDateMax = DateTime.local().plus({days: confirmationDelay});
+            const confirmationDateMax = DateTime.local().setZone(TIMEZONE).plus({days: confirmationDelay});
             const orders = await Order.find({date: {
-                    $gte: DateTime.local().toISODate(),
+                    $gte: DateTime.local().setZone(TIMEZONE).toISODate(),
                     $lt: confirmationDateMax
                 }});
             for(const order of orders){
@@ -63,10 +67,10 @@ class OrderWorker{
     async checkOrderConfirmed(){
         try {
             const verificationDelay = 1;
-            const verificationDate = DateTime.local().plus({days: verificationDelay});
+            const verificationDate = DateTime.local().setZone(TIMEZONE).plus({days: verificationDelay});
             const orders = await Order.find({
                 date: {
-                    $gte: DateTime.local().toISODate(),
+                    $gte: DateTime.local().setZone(TIMEZONE).toISODate(),
                     $lt: verificationDate
                 },
                 bookingType: 'BOOKED'
