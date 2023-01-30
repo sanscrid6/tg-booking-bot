@@ -25,3 +25,23 @@ export const phoneVerificationController = async (ctx: IContext) => {
         await ctx.sendMessage(ERROR_MESSAGE);
     }
 }
+
+export const textController = async (ctx: IContext) => {
+    try {
+        let keyboard;
+        if(ctx.state.user.phoneNumber){
+            keyboard = getKeyboard(ctx.state.user);
+        }else {
+            keyboard = [[{request_contact: true, text: 'Подтвердить номер телефона'}]]
+        }
+
+        await ctx.sendMessage('Используйте клавиатру для взаимодействия с ботом',
+            Markup
+                .keyboard(keyboard)
+                .resize())
+    } catch (e) {
+        logger.error('phone verification error');
+        logger.error(e);
+        await ctx.sendMessage(ERROR_MESSAGE);
+    }
+}

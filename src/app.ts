@@ -16,7 +16,7 @@ import {ActionType} from "./utils/Actions";
 import {todayConfirmedController} from "./controllers/admin";
 import {adminMiddleware} from "./middlewares/AdminMiddleware";
 import {initDb} from "./Db";
-import {phoneVerificationController} from "./controllers/phoneVerification";
+import {phoneVerificationController, textController} from "./controllers/phoneVerification";
 import {makeAdminController} from "./controllers/command";
 
 
@@ -39,6 +39,8 @@ const main = async () => {
     bot.hears(CONTROLLER_TRIGGERS.MY_BOOKINGS, myBookingsController);
     bot.hears(CONTROLLER_TRIGGERS.GET_BOOKED_USER, todayConfirmedController);
     bot.hears('/test', testController);
+
+    bot.on('text', textController);
 
     bot.action(new RegExp(`^[\\w\\d]{24}${ActionType.Book}$`), bookOrderController);
     bot.action(new RegExp(`^[\\w\\d]{24}${ActionType.Drop}$`), dropOrderController);
