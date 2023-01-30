@@ -3,8 +3,9 @@ import {Order} from "../../models/Order";
 import {dateFormatter, localDate} from "../../utils/Formatters";
 import {User} from "../../models/User";
 import logger from "../../utils/Logger";
-import {ERROR_MESSAGE} from "../../config";
+import {ERROR_MESSAGE, TIMEZONE} from "../../config";
 import {IContext} from "../../telegraf";
+import {DateTime} from "luxon";
 
 
 export const todayConfirmedController = async (ctx: IContext) => {
@@ -13,7 +14,7 @@ export const todayConfirmedController = async (ctx: IContext) => {
             return;
         }
 
-        const date = localDate(false).toISO();
+        const date = DateTime.local().setZone(TIMEZONE).set({hour: 0, minute: 1, second: 0, millisecond: 0}).toISO();
         const order = await Order.findOne({date});
 
         if(!order){
