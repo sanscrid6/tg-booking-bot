@@ -13,3 +13,9 @@ export const localDate = (withLocalTimezone=true) => {
     }
     return date;
 }
+
+// todo remove hardcode
+export const dateUTC = () =>
+    DateTime.fromISO(DateTime.local().setZone(TIMEZONE).toISODate())
+        .set({hour: 21, minute: 1, second: 0, millisecond: 0})
+

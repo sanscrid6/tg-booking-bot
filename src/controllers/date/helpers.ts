@@ -1,6 +1,6 @@
 import {IOrder, Order} from "../../models/Order";
 import {DateTime} from "luxon";
-import {dateFormatter, localDate} from "../../utils/Formatters";
+import {dateFormatter, dateUTC, localDate} from "../../utils/Formatters";
 import {mapOrderStateToEmoji, mapUserOrderStateToEmoji} from "../../utils/Emojies";
 import {generateInlineKeyboard} from "../../utils/Keyboard";
 import {ActionType} from "../../utils/Actions";
@@ -8,7 +8,7 @@ import {IUser} from "../../models/User";
 import {TIMEZONE} from "../../config";
 
 export const getActualDates = async () => {
-    const orders = await Order.find({date: {$gt: DateTime.local().setZone(TIMEZONE).toISODate()}});
+    const orders = await Order.find({date: {$gt: dateUTC().toISODate()}});
 
     return generateInlineKeyboard<IOrder>(orders, {
         textGetter: order => `${dateFormatter.format(order.date)} ${mapOrderStateToEmoji(order)}`,
@@ -27,9 +27,7 @@ export const getUserOrders = (user: IUser) => {
         DateTime.fromISO(a.date.toISOString()).diff(DateTime.fromISO(b.date.toISOString()), 'days').days;
 
     allOrders = allOrders
-        .filter(order =>
-            DateTime.fromISO(order.date.toISOString()).setZone(TIMEZONE) >=
-            DateTime.local().setZone(TIMEZONE).set({hour: 0, minute: 1, second: 0, millisecond: 0}))
+        .filter(order => DateTime.fromISO(order.date.toISOString()) >= dateUTC())
         .sort(comparer)
 
     return generateInlineKeyboard<IOrder>(allOrders, {

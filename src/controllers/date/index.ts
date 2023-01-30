@@ -1,5 +1,5 @@
 import {Context, Markup} from "telegraf";
-import {dateFormatter, localDate} from "../../utils/Formatters";
+import {dateFormatter, dateUTC, localDate} from "../../utils/Formatters";
 import logger from "../../utils/Logger";
 import {getActualDates, getUserOrders} from "./helpers";
 import {ERROR_MESSAGE, TIMEZONE} from "../../config";
@@ -31,9 +31,9 @@ export const bookOrderController = async (ctx: Context) => {
     try {
         if(ctx.callbackQuery){
             const {user, order} = await getUserAndOrderFromCallbackMessage(ctx, ['booked', 'wishes', 'confirmed']);
-            const orderDate = DateTime.fromISO(order.date.toISOString()).setZone(TIMEZONE);
+            const orderDate = DateTime.fromISO(order.date.toISOString());
 
-            if(orderDate < localDate()){
+            if(orderDate < dateUTC()){
                 await ctx.answerCbQuery(`Обновите список достпуных дат нажав "${CONTROLLER_TRIGGERS.DATES_LIST}"`);
             }
             else if(order.bookingType !== 'EMPTY') {
@@ -50,7 +50,7 @@ export const bookOrderController = async (ctx: Context) => {
                 await ctx.answerCbQuery(`Вы стали в очередь на ${dateFormatter.format(order.date)}`);
             }
             else if(order.bookingType === 'EMPTY'){
-                if(orderDate.diff(localDate(), 'days').days <= 1){
+                if(orderDate.diff(dateUTC(), 'days').days <= 1){
                     user.confirmed = user.confirmed ? [...user.confirmed, order] : [order];
                     order.bookingType = 'CONFIRMED';
                     await Promise.all([user.save(), order.save()]);

@@ -1,6 +1,6 @@
 import {Context} from "telegraf";
 import {Order} from "../../models/Order";
-import {dateFormatter, localDate} from "../../utils/Formatters";
+import {dateFormatter, dateUTC, localDate} from "../../utils/Formatters";
 import {User} from "../../models/User";
 import logger from "../../utils/Logger";
 import {ERROR_MESSAGE, TIMEZONE} from "../../config";
@@ -14,9 +14,8 @@ export const todayConfirmedController = async (ctx: IContext) => {
             return;
         }
 
-        const date = DateTime.local().setZone(TIMEZONE).set({hour: 0, minute: 1, second: 0, millisecond: 0}).toISO();
+        const date = dateUTC().toISO();
         const order = await Order.findOne({date});
-
         if(!order){
             throw new Error(`cant find order on ${date}`);
         }
