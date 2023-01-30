@@ -19,7 +19,7 @@ export const dateListController = async (ctx: Context) => {
         }
 
         const renderOrders = await getActualDates();
-        await ctx.reply(`Доступные даты. ${EMOJIES.GREEN_CIRCLE} - свободная дата, ${EMOJIES.YELLOW_CIRCLE} - забронированная, ${EMOJIES.RED_CIRCLE} - подтвержденная`,
+        await ctx.reply(`Доступные даты. \n${EMOJIES.GREEN_CIRCLE} - свободная дата, \n${EMOJIES.YELLOW_CIRCLE} - забронированная, \n${EMOJIES.RED_CIRCLE} - подтвержденная`,
             Markup.inlineKeyboard(renderOrders));
     } catch (e) {
         logger.error(e);
